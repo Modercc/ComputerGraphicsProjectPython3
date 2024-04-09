@@ -293,7 +293,7 @@ def display():
 
 def idle():#--------------with more complex display items like turning wheel---
     global tickTime, prevTime, score
-    jeepObj.rotateWheel(-0.1 * tickTime)    
+    #jeepObj.rotateWheel(-0.1 * tickTime)    
     glutPostRedisplay()
     
     curTime = glutGet(GLUT_ELAPSED_TIME)
@@ -397,9 +397,13 @@ def specialKeys(keypress, mX, mY):
     # move the car only if score begin time <= 0 (or score >= 6)
     if score >= 6 and keypress == GLUT_KEY_UP:
         jeepObj.move(False, speed)
+        jeepObj.wheelDir = 'fwd'
+        jeepObj.rotateWheel(15)
 
     elif score >= 6 and keypress == GLUT_KEY_DOWN:
         jeepObj.move(False, -speed)
+        jeepObj.wheelDir = 'back'
+        jeepObj.rotateWheel(15)
 
     if score >= 6 and keypress == GLUT_KEY_LEFT:
         jeepObj.move(True, speed)
@@ -486,8 +490,8 @@ def dist(pt1, pt2):
     y = pt2[1]
     return math.sqrt((a-x)**2 + (b-y)**2)
 
-def noReshape(newX, newY): #used to ensure program works correctly when resized
-    glutReshapeWindow(windowSize,windowSize)
+def reshape(newX, newY): #used to ensure program works correctly when resized
+    glViewport(0,0,newX,newY)
 
 #--------------------------------------------making game more complex--------
 def addCone(x,z):
@@ -545,6 +549,7 @@ def gameOver():
     #recordGame() #add to excel
     glutHideWindow()
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH)
+
     glutInitWindowSize(200,200)
     glutInitWindowPosition(600,100)
     overWin = glutCreateWindow(b'Game Over!')
@@ -711,9 +716,12 @@ def main():
     # things to do
     # change the window resolution in the game
     glutInitWindowSize(windowSize, windowSize)
-    
+
     glutInitWindowPosition(0, 0)
     mainWin = glutCreateWindow(b'CS4182')
+
+
+    
     glutDisplayFunc(display)
     glutIdleFunc(idle)#wheel turn
 
@@ -726,7 +734,7 @@ def main():
     glutSpecialFunc(specialKeys)
     glutKeyboardFunc(myKeyboard)
     
-    glutReshapeFunc(noReshape)
+    glutReshapeFunc(reshape)
     # things to do
     # add a menu
     glutCreateMenu(myMenu)

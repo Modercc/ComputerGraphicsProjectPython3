@@ -22,7 +22,7 @@ class jeep:
 
     wheelTurn = 0.0
     revWheelTurn = 360.0
-    #allWheels=[wheel1,wheel2]
+    allWheels=[wheel1,wheel2]
 
     wheelDir = 'stop'
     
@@ -30,10 +30,10 @@ class jeep:
     posY = 1.75
     posZ = 0.0
 
-##    wheel1LocX =0 
-##    wheel1LocZ = 0
-##    wheel2LocX = 0
-##    wheel2LocZ = 0 
+    wheel1LocX = 0 
+    wheel1LocZ = 0
+    wheel2LocX = 0
+    wheel2LocZ = 0 
 
     sizeX = 1.0
     sizeY = 1.0
@@ -156,10 +156,10 @@ class jeep:
         if rot == False: 
             self.posZ += val * math.cos(math.radians(self.rotation)) #must make more sophisticated to go in direction
             self.posX += val * math.sin(math.radians(self.rotation))
-##            self.wheel1LocZ += val * math.cos(math.radians(self.rotation))
-##            self.wheel1LocX += val * math.sin(math.radians(self.rotation))
-##            self.wheel2LocZ += val * math.cos(math.radians(self.rotation))
-##            self.wheel2LocX += val * math.sin(math.radians(self.rotation))
+            self.wheel1LocZ += val * math.cos(math.radians(self.rotation))
+            self.wheel1LocX += val * math.sin(math.radians(self.rotation))
+            self.wheel2LocZ += val * math.cos(math.radians(self.rotation))
+            self.wheel2LocX += val * math.sin(math.radians(self.rotation))
         elif rot == True: 
             self.rotation+= val
 
