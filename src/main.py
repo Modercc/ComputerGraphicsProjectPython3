@@ -144,16 +144,60 @@ class Scene:
         glBegin(GL_POLYGON)
 
         glTexCoord2f(self.landH, self.landH)
-        glVertex3f(self.landLength, 0.1, self.cont * self.landLength / 2 + 1)
+        glVertex3f(self.landLength / 2, 0.1, self.cont * self.landLength / 2 + 3)
 
         glTexCoord2f(self.landH, self.landW)
-        glVertex3f(self.landLength, 0.1, self.landLength * self.cont / 2 - 1)
+        glVertex3f(self.landLength / 2, 0.1, self.landLength * self.cont / 2 - 3)
 
         glTexCoord2f(self.landW, self.landW)
-        glVertex3f(0, 0.1, self.landLength * self.cont / 2 - 1)
+        glVertex3f(0, 0.1, self.landLength * self.cont / 2 - 3)
 
         glTexCoord2f(self.landW, self.landH)
-        glVertex3f(0, 0.1, self.cont * self.landLength / 2 + 1)
+        glVertex3f(0, 0.1, self.cont * self.landLength / 2 + 3)
+        glEnd()
+
+        glDisable(GL_TEXTURE_2D)
+
+        # adding grass
+        glEnable(GL_TEXTURE_2D)
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
+        glBindTexture(GL_TEXTURE_2D, grassTextureID)
+
+        glBegin(GL_POLYGON)
+
+        glTexCoord2f(self.landH, self.landH)
+        glVertex3f(self.landLength * 10, -0.1, 2 * self.cont * self.landLength)
+
+        glTexCoord2f(self.landH, self.landW)
+        glVertex3f(self.landLength * 10, -0.1, 2 * (-self.landLength))
+
+        glTexCoord2f(self.landW, self.landW)
+        glVertex3f((-self.landLength) * 10, -0.1, 2 * (-self.landLength))
+
+        glTexCoord2f(self.landW, self.landH)
+        glVertex3f((-self.landLength) * 10, -0.1, 2 * self.cont * self.landLength)
+        glEnd()
+
+        glDisable(GL_TEXTURE_2D)
+
+        # add finish line
+        glEnable(GL_TEXTURE_2D)
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
+        glBindTexture(GL_TEXTURE_2D, finishLineTextureID)
+
+        glBegin(GL_POLYGON)
+
+        glTexCoord2f(self.landH, self.landH)
+        glVertex3f(self.landLength, 0, self.cont * self.landLength)
+
+        glTexCoord2f(self.landH, self.landW)
+        glVertex3f(self.landLength, 0, self.cont * self.landLength + 3)
+
+        glTexCoord2f(self.landW, self.landW)
+        glVertex3f(-self.landLength, 0, self.cont * self.landLength + 3)
+
+        glTexCoord2f(self.landW, self.landH)
+        glVertex3f(-self.landLength, 0, self.cont * self.landLength)
         glEnd()
 
         glDisable(GL_TEXTURE_2D)
@@ -235,7 +279,7 @@ def display():
 
     # if (usedDiamond == False):
     #     diamondObj.draw()
-    
+
     jeepObj.draw()
     jeepObj.drawW1()
     jeepObj.drawW2()
@@ -464,7 +508,7 @@ def collisionCheck():
     if (jeepObj.posZ >= land*gameEnlarge):
         gameSuccess()
 
-    if jeepObj.posZ >= land * gameEnlarge / 2 - 1 and jeepObj.posX > 0:
+    if land * gameEnlarge / 2 + 3 >= jeepObj.posZ >= land * gameEnlarge / 2 - 3 and land / 2 > jeepObj.posX > 0:
         speed = 5.0
 
 #----------------------------------multiplayer dev (using tracker)-----------
@@ -565,7 +609,13 @@ def loadSceneTextures():
     roadTextureID = loadTexture("../img/road2.png")
 
     global ribbonTextureID
-    ribbonTextureID = loadTexture("../img/starSparkle.jpg")
+    ribbonTextureID = loadTexture("../img/arrows.jpg")
+
+    global grassTextureID
+    grassTextureID = loadTexture("../img/grass.png")
+
+    global finishLineTextureID
+    finishLineTextureID = loadTexture("../img/blackWhiteSquare.jpg")
     
 #-----------------------------------------------lighting work--------------
 def initializeLight():
@@ -573,11 +623,11 @@ def initializeLight():
     glEnable(GL_LIGHT0)                 
     glEnable(GL_DEPTH_TEST)              
     glEnable(GL_NORMALIZE)               
-    glClearColor(0.1, 0.1, 0.1, 0.0)
+    glClearColor(0.2, 0.3, 0.4, 1.0)
 
-applyAmbient = False
-applyDiffuse = False
-applySpecular = False
+applyAmbient = True
+applyDiffuse = True
+applySpecular = True
 
 def myLights():
     global applyAmbient
