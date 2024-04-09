@@ -5,7 +5,7 @@ from OpenGL.GLU import *
 import math, time, random, csv, datetime
 import ImportObject
 import PIL.Image as Image
-import jeep, cone, star
+import jeep, cone, star, diamond
 
 windowSize = 600
 helpWindow = False
@@ -58,7 +58,7 @@ gameEnlarge = 10
 coneAmount = 15
 starAmount = 5 #val = -10 pts
 diamondAmount = 1 #val = deducts entire by 1/2
-# diamondObj = diamond.diamond(random.randint(-land, land), random.randint(10.0, land*gameEnlarge))
+diamondObj = diamond.diamond(random.randint(-land, land), random.randint(10.0, land*gameEnlarge))
 usedDiamond = False
 
 allcones = []
@@ -207,8 +207,8 @@ def display():
     for star in allstars:
         star.draw()
 
-    # if (usedDiamond == False):
-    #     diamondObj.draw()
+    if (usedDiamond == False):
+        diamondObj.draw()
     
     jeepObj.draw()
     jeepObj.drawW1()
@@ -314,7 +314,7 @@ def specialKeys(keypress, mX, mY):
     elif score >= 6 and keypress == GLUT_KEY_DOWN:
         jeepObj.move(False, -1.0)
 
-    elif score >= 6 and keypress == GLUT_KEY_LEFT:
+    if score >= 6 and keypress == GLUT_KEY_LEFT:
         jeepObj.move(True, 1.0)
 
     elif score >= 6 and keypress == GLUT_KEY_RIGHT:
@@ -430,10 +430,10 @@ def collisionCheck():
             rewardCoord.remove(reward)
             countTime -= 10
 
-#    if (dist((jeepObj.posX, jeepObj.posZ), (diamondObj.posX, diamondObj.posZ)) <= ckSense and usedDiamond ==False):
-#        print ("Diamond bonus!")
-#        countTime /= 2
-#        usedDiamond = True
+    if (dist((jeepObj.posX, jeepObj.posZ), (diamondObj.posX, diamondObj.posZ)) <= ckSense and usedDiamond ==False):
+        print ("Diamond bonus!")
+        countTime /= 2
+        usedDiamond = True
 
     if (jeepObj.posZ >= land*gameEnlarge):
         gameSuccess()
@@ -662,7 +662,7 @@ def main():
     for star in allstars:
         star.makeDisplayLists()
     
-    # diamondObj.makeDisplayLists()
+    diamondObj.makeDisplayLists()
     
     staticObjects()
     if (applyLighting == True):
