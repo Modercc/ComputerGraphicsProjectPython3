@@ -277,15 +277,9 @@ def display():
     for star in allstars:
         star.draw()
 
-<<<<<<< HEAD
-    # if (usedDiamond == False):
-    #     diamondObj.draw()
-
-=======
     if (usedDiamond == False):
         diamondObj.draw()
     
->>>>>>> diamond
     jeepObj.draw()
     jeepObj.drawW1()
     jeepObj.drawW2()
@@ -391,11 +385,7 @@ def specialKeys(keypress, mX, mY):
         jeepObj.move(False, -speed)
 
     if score >= 6 and keypress == GLUT_KEY_LEFT:
-<<<<<<< HEAD
         jeepObj.move(True, speed)
-=======
-        jeepObj.move(True, 1.0)
->>>>>>> diamond
 
     elif score >= 6 and keypress == GLUT_KEY_RIGHT:
         jeepObj.move(True, -speed)
