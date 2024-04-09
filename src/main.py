@@ -5,7 +5,7 @@ from OpenGL.GLU import *
 import math, time, random, csv, datetime
 import ImportObject
 import PIL.Image as Image
-import jeep, cone, star
+import jeep, cone, star, cloud
 
 windowSize = 600
 helpWindow = False
@@ -60,6 +60,7 @@ coneAmount = 15
 starAmount = 5 #val = -10 pts
 diamondAmount = 1 #val = deducts entire by 1/2
 # diamondObj = diamond.diamond(random.randint(-land, land), random.randint(10.0, land*gameEnlarge))
+cloudObj = cloud.cloud(0, land * gameEnlarge / 2)
 usedDiamond = False
 
 allcones = []
@@ -280,6 +281,7 @@ def display():
     # if (usedDiamond == False):
     #     diamondObj.draw()
 
+    cloudObj.draw()
     jeepObj.draw()
     jeepObj.drawW1()
     jeepObj.drawW2()
@@ -745,7 +747,8 @@ def main():
         star.makeDisplayLists()
     
     # diamondObj.makeDisplayLists()
-    
+    cloudObj.makeDisplayLists()
+
     staticObjects()
     if (applyLighting == True):
         initializeLight()
