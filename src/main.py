@@ -338,13 +338,26 @@ def setObjView():
 
 #-------------------------------------------user inputs------------------
 def mouseHandle(button, state, x, y):
-    global midDown
+    global midDown, eyeX, eyeY, eyeZ
     if (button == GLUT_MIDDLE_BUTTON and state == GLUT_DOWN):
         midDown = True
-        print ('pushed')
     else:
         midDown = False    
+
+    if button == 3 and state == GLUT_DOWN:
+        eyeX *= 0.9
+        eyeY *= 0.9
+        eyeZ *= 0.9
+    elif button == 4 and state == GLUT_DOWN:
+        eyeX *= 1.1
+        eyeY *= 1.1
+        eyeZ *= 1.1
+    if centered == False:
+        setView()
+    elif centered == True:
+        setObjView()
         
+
 def motionHandle(x,y):
     global nowX, nowY, angle, eyeX, eyeY, eyeZ, phi
     if (midDown == True):
@@ -357,9 +370,9 @@ def motionHandle(x,y):
         elif (nowX - pastX < 0):
             angle += 0.25
         elif (nowY - pastY > 0): #look into looking over and under object...
-            phi += 1.0
+            phi += 0.25
         elif (nowX - pastY <0):
-            phi -= 1.0
+            phi -= 0.25
         eyeX = radius * math.sin(angle) 
         eyeZ = radius * math.cos(angle)
         eyeY = radius * math.sin(phi)
@@ -708,6 +721,7 @@ def main():
     glutMotionFunc(motionHandle)
     glutSpecialFunc(specialKeys)
     glutKeyboardFunc(myKeyboard)
+    
     glutReshapeFunc(noReshape)
     # things to do
     # add a menu
