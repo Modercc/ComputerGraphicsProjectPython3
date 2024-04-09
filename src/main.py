@@ -5,7 +5,7 @@ from OpenGL.GLU import *
 import math, time, random, csv, datetime
 import ImportObject
 import PIL.Image as Image
-import jeep, cone, star, cloud, diamond, tree, tree1, tree2
+import jeep, cone, star, cloud, diamond, tree, tree1, tree2, eagleFlying, eagleSitting
 
 windowSize = 600
 helpWindow = False
@@ -64,6 +64,8 @@ diamondObj = diamond.diamond(random.randint(-land, land), random.randint(10.0, l
 cloudObjs = [ cloud.cloud(0, land * gameEnlarge / 2), cloud.cloud(0, land * gameEnlarge) ]
 treeObjs = [ ]
 usedDiamond = False
+eagleObj = eagleFlying.eagleFlying(0, 0)
+eagleObj1 = eagleSitting.eagleSitting(0, land * gameEnlarge + 1)
 
 allcones = []
 allstars = []
@@ -294,6 +296,13 @@ def display():
     jeepObj.drawW2()
     jeepObj.drawLight()
     #personObj.draw()
+
+    if score < 7:
+        eagleObj.draw()
+
+    else:
+        eagleObj1.draw()
+
     glutSwapBuffers()
 
 def idle():#--------------with more complex display items like turning wheel---
@@ -305,6 +314,7 @@ def idle():#--------------with more complex display items like turning wheel---
     tickTime =  curTime - prevTime
     prevTime = curTime
     score = int(curTime/1000)
+    eagleObj.move(score / 10)
 
     # if the game has not concluded
     if overReason == '' and finalScore == 0:
@@ -798,6 +808,9 @@ def main():
 
     for treeObj in treeObjs:
         treeObj.makeDisplayLists()
+
+    eagleObj.makeDisplayLists()
+    eagleObj1.makeDisplayLists()
 
     staticObjects()
     if (applyLighting == True):
