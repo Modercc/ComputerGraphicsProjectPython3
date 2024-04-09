@@ -5,7 +5,7 @@ from OpenGL.GLU import *
 import math, time, random, csv, datetime
 import ImportObject
 import PIL.Image as Image
-import jeep, cone, star, cloud, diamond
+import jeep, cone, star, cloud, diamond, tree, tree1, tree2
 
 windowSize = 600
 helpWindow = False
@@ -59,8 +59,10 @@ gameEnlarge = 10
 coneAmount = 15
 starAmount = 5 #val = -10 pts
 diamondAmount = 1 #val = deducts entire by 1/2
+treeAmount = 10
 diamondObj = diamond.diamond(random.randint(-land, land), random.randint(10.0, land*gameEnlarge))
 cloudObjs = [ cloud.cloud(0, land * gameEnlarge / 2), cloud.cloud(0, land * gameEnlarge) ]
+treeObjs = [ ]
 usedDiamond = False
 
 allcones = []
@@ -284,6 +286,9 @@ def display():
     for cloudObj in cloudObjs:
         cloudObj.draw()
 
+    for treeObj in treeObjs:
+        treeObj.draw()
+
     jeepObj.draw()
     jeepObj.drawW1()
     jeepObj.drawW2()
@@ -485,6 +490,18 @@ def addStar(x, z):
     print(allstars)
     allstars.append(star.star(x, z))
     rewardCoord.append((x, z))
+
+def addTree(x, z):
+    treeType = random.choice([0, 1, 2])
+
+    if treeType == 0:
+        treeObjs.append(tree.tree(x, z))
+
+    elif treeType == 1:
+        treeObjs.append(tree1.tree1(x, z))
+
+    else:
+        treeObjs.append(tree2.tree2(x, z))
 
 def collisionCheck():
     global overReason, score, usedDiamond, countTime, speed
@@ -742,6 +759,10 @@ def main():
     for i in range(starAmount):
         addStar(random.randint(-land, land), random.randint(10.0, land * gameEnlarge))
 
+    for i in range(treeAmount):
+        addTree(random.randint(land + 3, 2 * land), random.randint(0, land * gameEnlarge))
+        addTree(random.randint(2 * (-land), -land - 3), random.randint(0, land * gameEnlarge))
+
     for cone in allcones:
         cone.makeDisplayLists()
 
@@ -752,6 +773,9 @@ def main():
 
     for cloudObj in cloudObjs:
         cloudObj.makeDisplayLists()
+
+    for treeObj in treeObjs:
+        treeObj.makeDisplayLists()
 
     staticObjects()
     if (applyLighting == True):
