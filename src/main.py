@@ -356,13 +356,13 @@ def motionHandle(x,y):
             angle -= 0.25
         elif (nowX - pastX < 0):
             angle += 0.25
-        #elif (nowY - pastY > 0): look into looking over and under object...
-            #phi += 1.0
-        #elif (nowX - pastY <0):
-            #phi -= 1.0
+        elif (nowY - pastY > 0): #look into looking over and under object...
+            phi += 1.0
+        elif (nowX - pastY <0):
+            phi -= 1.0
         eyeX = radius * math.sin(angle) 
         eyeZ = radius * math.cos(angle)
-        #eyeY = radius * math.sin(phi)
+        eyeY = radius * math.sin(phi)
     if centered == False:
         setView()
     elif centered == True:
