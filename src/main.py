@@ -5,7 +5,7 @@ from OpenGL.GLU import *
 import math, time, random, csv, datetime
 import ImportObject
 import PIL.Image as Image
-import jeep, cone, star, cloud
+import jeep, cone, star, cloud, diamond
 
 windowSize = 600
 helpWindow = False
@@ -59,8 +59,8 @@ gameEnlarge = 10
 coneAmount = 15
 starAmount = 5 #val = -10 pts
 diamondAmount = 1 #val = deducts entire by 1/2
-# diamondObj = diamond.diamond(random.randint(-land, land), random.randint(10.0, land*gameEnlarge))
-cloudObj = cloud.cloud(0, land * gameEnlarge / 2)
+diamondObj = diamond.diamond(random.randint(-land, land), random.randint(10.0, land*gameEnlarge))
+cloudObjs = [ cloud.cloud(0, land * gameEnlarge / 2), cloud.cloud(0, land * gameEnlarge) ]
 usedDiamond = False
 
 allcones = []
@@ -278,10 +278,12 @@ def display():
     for star in allstars:
         star.draw()
 
-    # if (usedDiamond == False):
-    #     diamondObj.draw()
+    if (usedDiamond == False):
+        diamondObj.draw()
 
-    cloudObj.draw()
+    for cloudObj in cloudObjs:
+        cloudObj.draw()
+
     jeepObj.draw()
     jeepObj.drawW1()
     jeepObj.drawW2()
@@ -358,13 +360,13 @@ def motionHandle(x,y):
             angle -= 0.25
         elif (nowX - pastX < 0):
             angle += 0.25
-        #elif (nowY - pastY > 0): look into looking over and under object...
-            #phi += 1.0
-        #elif (nowX - pastY <0):
-            #phi -= 1.0
+        elif (nowY - pastY > 0): #look into looking over and under object...
+            phi += 1.0
+        elif (nowX - pastY <0):
+            phi -= 1.0
         eyeX = radius * math.sin(angle) 
         eyeZ = radius * math.cos(angle)
-        #eyeY = radius * math.sin(phi)
+        eyeY = radius * math.sin(phi)
     if centered == False:
         setView()
     elif centered == True:
@@ -502,10 +504,10 @@ def collisionCheck():
             rewardCoord.remove(reward)
             countTime -= 10
 
-#    if (dist((jeepObj.posX, jeepObj.posZ), (diamondObj.posX, diamondObj.posZ)) <= ckSense and usedDiamond ==False):
-#        print ("Diamond bonus!")
-#        countTime /= 2
-#        usedDiamond = True
+    if (dist((jeepObj.posX, jeepObj.posZ), (diamondObj.posX, diamondObj.posZ)) <= ckSense and usedDiamond ==False):
+        print ("Diamond bonus!")
+        countTime /= 2
+        usedDiamond = True
 
     if (jeepObj.posZ >= land*gameEnlarge):
         gameSuccess()
@@ -745,17 +747,16 @@ def main():
 
     for star in allstars:
         star.makeDisplayLists()
-    
-    # diamondObj.makeDisplayLists()
-    cloudObj.makeDisplayLists()
+
+    diamondObj.makeDisplayLists()
+
+    for cloudObj in cloudObjs:
+        cloudObj.makeDisplayLists()
 
     staticObjects()
     if (applyLighting == True):
         initializeLight()
     glutMainLoop()
 
-
-
-    
 main()
 
