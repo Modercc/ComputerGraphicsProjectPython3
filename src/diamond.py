@@ -23,6 +23,7 @@ class diamond:
         self.posX = x
         self.posZ = z
         self.posY = 1
+        self.counter = 0
 
     def makeDisplayLists(self):
         self.obj.loadOBJ()
@@ -33,11 +34,17 @@ class diamond:
         glEndList()
 
     def draw(self):
+        self.counter =  (self.counter+1)%1000
         glPushMatrix()
 
         glTranslatef(self.posX,self.posY,self.posZ)
         glRotatef(self.rotation,0.0,1.0,0.0)
         glScalef(self.sizeX,self.sizeY,self.sizeZ)
+
+        if self.counter<500:
+            self.posY+=0.001
+        else:
+            self.posY-=0.001
 
         glCallList(self.displayList)
         glPopMatrix()

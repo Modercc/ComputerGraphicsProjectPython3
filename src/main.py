@@ -543,9 +543,9 @@ def initializeLight():
     glEnable(GL_NORMALIZE)               
     glClearColor(0.1, 0.1, 0.1, 0.0)
 
-applyAmbient = False
-applyDiffuse = False
-applySpecular = False
+applyAmbient = True
+applyDiffuse = True
+applySpecular = True
 
 def myLights():
     global applyAmbient
