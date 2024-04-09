@@ -19,6 +19,7 @@ score = 0
 finalScore = 0
 canStart = False
 overReason = ""
+speed = 1.0
 
 #for wheel spinning
 tickTime = 0
@@ -95,6 +96,8 @@ class Scene:
     landW = 1.0
     landH = 0.0
     cont = gameEnlarge
+    ribbonW = 1.0
+    ribbonH = 0.0
     
     def draw(self):
         self.drawAxis()
@@ -132,6 +135,29 @@ class Scene:
         glEnd()
 
         glDisable(GL_TEXTURE_2D)
+
+        # accelerating ribbon
+        glEnable(GL_TEXTURE_2D)
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
+        glBindTexture(GL_TEXTURE_2D, ribbonTextureID)
+
+        glBegin(GL_POLYGON)
+
+        glTexCoord2f(self.landH, self.landH)
+        glVertex3f(self.landLength, 0.1, self.cont * self.landLength / 2 + 1)
+
+        glTexCoord2f(self.landH, self.landW)
+        glVertex3f(self.landLength, 0.1, self.landLength * self.cont / 2 - 1)
+
+        glTexCoord2f(self.landW, self.landW)
+        glVertex3f(0, 0.1, self.landLength * self.cont / 2 - 1)
+
+        glTexCoord2f(self.landW, self.landH)
+        glVertex3f(0, 0.1, self.cont * self.landLength / 2 + 1)
+        glEnd()
+
+        glDisable(GL_TEXTURE_2D)
+
 
 #--------------------------------------populating scene----------------
 def staticObjects():
@@ -305,20 +331,20 @@ def motionHandle(x,y):
 def specialKeys(keypress, mX, mY):
     # things to do
     # this is the function to move the car
-    global jeepObj, centered
+    global jeepObj, centered, speed
 
     # move the car only if score begin time <= 0 (or score >= 6)
     if score >= 6 and keypress == GLUT_KEY_UP:
-        jeepObj.move(False, 1.0)
+        jeepObj.move(False, speed)
 
     elif score >= 6 and keypress == GLUT_KEY_DOWN:
-        jeepObj.move(False, -1.0)
+        jeepObj.move(False, -speed)
 
-    elif score >= 6 and keypress == GLUT_KEY_LEFT:
-        jeepObj.move(True, 1.0)
+    if score >= 6 and keypress == GLUT_KEY_LEFT:
+        jeepObj.move(True, speed)
 
     elif score >= 6 and keypress == GLUT_KEY_RIGHT:
-        jeepObj.move(True, -1.0)
+        jeepObj.move(True, -speed)
 
     # update object view after each movement
     if centered == True:
@@ -413,7 +439,7 @@ def addStar(x, z):
     rewardCoord.append((x, z))
 
 def collisionCheck():
-    global overReason, score, usedDiamond, countTime
+    global overReason, score, usedDiamond, countTime, speed
     for obstacle in obstacleCoord:
         if dist((jeepObj.posX, jeepObj.posZ), obstacle) <= ckSense:
             overReason = "You hit an obstacle!"
@@ -437,6 +463,9 @@ def collisionCheck():
 
     if (jeepObj.posZ >= land*gameEnlarge):
         gameSuccess()
+
+    if jeepObj.posZ >= land * gameEnlarge / 2 - 1 and jeepObj.posX > 0:
+        speed = 5.0
 
 #----------------------------------multiplayer dev (using tracker)-----------
 def recordGame():
@@ -534,6 +563,9 @@ def loadTexture(imageName):
 def loadSceneTextures():
     global roadTextureID
     roadTextureID = loadTexture("../img/road2.png")
+
+    global ribbonTextureID
+    ribbonTextureID = loadTexture("../img/starSparkle.jpg")
     
 #-----------------------------------------------lighting work--------------
 def initializeLight():
