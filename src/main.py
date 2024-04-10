@@ -6,7 +6,7 @@ from openal import *
 import math, time, random, csv, datetime
 import ImportObject
 import PIL.Image as Image
-import jeep, cone, star, cloud, diamond, tree, tree1, tree2, eagleFlying, eagleSitting
+import jeep, cone, star, cloud, diamond, tree, tree1, tree2, eagleFlying, eagleSitting, tower
 
 windowSize = 600
 helpWindow = False
@@ -36,6 +36,7 @@ allJeeps = [jeep1Obj, jeep2Obj, jeep3Obj]
 jeepNum = 0
 jeepObj = allJeeps[jeepNum]
 #personObj = person.person(10.0,10.0)
+towerObj = tower.tower(0, -35)
 
 #concerned with camera
 eyeX = 0.0
@@ -181,10 +182,10 @@ class Scene:
         glVertex3f(self.landLength * 10, -0.1, 2 * self.cont * self.landLength)
 
         glTexCoord2f(self.landH, self.landW)
-        glVertex3f(self.landLength * 10, -0.1, 2 * (-self.landLength))
+        glVertex3f(self.landLength * 10, -0.1, 3 * (-self.landLength))
 
         glTexCoord2f(self.landW, self.landW)
-        glVertex3f((-self.landLength) * 10, -0.1, 2 * (-self.landLength))
+        glVertex3f((-self.landLength) * 10, -0.1, 3 * (-self.landLength))
 
         glTexCoord2f(self.landW, self.landH)
         glVertex3f((-self.landLength) * 10, -0.1, 2 * self.cont * self.landLength)
@@ -308,6 +309,7 @@ def display():
     jeepObj.drawW2()
     jeepObj.drawLight()
     #personObj.draw()
+    towerObj.draw()
 
     if score < 7:
         eagleObj.draw()
@@ -712,7 +714,7 @@ def initializeLight():
     glEnable(GL_NORMALIZE)               
     glClearColor(0.2, 0.3, 0.4, 1.0)
 
-applyAmbient = True
+applyAmbient = False
 applyDiffuse = True
 applySpecular = True
 
@@ -819,6 +821,7 @@ def main():
     jeep2Obj.makeDisplayLists()
     jeep3Obj.makeDisplayLists()
     #personObj.makeDisplayLists()
+    towerObj.makeDisplayLists()
 
     # things to do
     # add a automatic object
