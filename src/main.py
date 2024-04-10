@@ -2,6 +2,7 @@
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
+from openal import *
 import math, time, random, csv, datetime
 import ImportObject
 import PIL.Image as Image
@@ -763,6 +764,9 @@ def myMenu(value):
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~the finale!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def main():
+
+    source = oalOpen("../sounds/eagle-scream-112940.wav")
+    
     glutInit()
 
     global prevTime, mainWin
@@ -844,6 +848,8 @@ def main():
     staticObjects()
     if (applyLighting == True):
         initializeLight()
+
+    source.play()
     glutMainLoop()
 
 main()
