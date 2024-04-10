@@ -639,7 +639,7 @@ def gameSuccess():
 def winScreen():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glColor3f(0.0,1.0,0.0)
-    drawTextBitmap("Completed Trial!" , -0.6, 0.85)
+    drawTextBitmap("Bird observed!" , -0.6, 0.85)
     glColor3f(0.0,1.0,0.0)
     drawTextBitmap("Your score is: ", -1.0, 0.0)
     glColor3f(1.0,1.0,1.0)
