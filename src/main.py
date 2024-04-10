@@ -75,6 +75,11 @@ obstacleCoord = []
 rewardCoord = []
 ckSense = 5.0
 
+#audio
+eagleSound = oalOpen("../sounds/eagle-scream-112940.wav")
+starSound = oalOpen("../sounds/star.wav")
+diamondSound = oalOpen("../sounds/diamond.wav")
+
 #concerned with lighting#########################!!!!!!!!!!!!!!!!##########
 applyLighting = True
 
@@ -561,7 +566,7 @@ def addTree(x, z):
         treeObjs.append(tree2.tree2(x, z))
 
 def collisionCheck():
-    global overReason, score, usedDiamond, countTime, speedupScore
+    global overReason, score, usedDiamond, countTime, speedupScore, starSound, diamondSound
     for obstacle in obstacleCoord:
         if dist((jeepObj.posX, jeepObj.posZ), obstacle) <= ckSense:
             overReason = "You hit an obstacle!"
@@ -573,12 +578,15 @@ def collisionCheck():
 
     for reward in rewardCoord:
         if dist((jeepObj.posX, jeepObj.posZ), reward) <= ckSense:
+            
+            starSound.play()
             print("Star bonus!")
             allstars.pop(rewardCoord.index(reward))
             rewardCoord.remove(reward)
             countTime -= 10
 
     if (dist((jeepObj.posX, jeepObj.posZ), (diamondObj.posX, diamondObj.posZ)) <= ckSense and usedDiamond ==False):
+        diamondSound.play()
         print ("Diamond bonus!")
         countTime /= 2
         usedDiamond = True
@@ -764,8 +772,6 @@ def myMenu(value):
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~the finale!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def main():
-
-    source = oalOpen("../sounds/eagle-scream-112940.wav")
     
     glutInit()
 
@@ -849,7 +855,7 @@ def main():
     if (applyLighting == True):
         initializeLight()
 
-    source.play()
+    eagleSound.play()
     glutMainLoop()
 
 main()
