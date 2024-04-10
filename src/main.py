@@ -20,6 +20,7 @@ finalScore = 0
 canStart = False
 overReason = ""
 speed = 1.0
+speedupScore = -100
 
 #for wheel spinning
 tickTime = 0
@@ -269,11 +270,16 @@ def display():
     elif (score == 6):
         canStart = True
         glColor(1.0,0.0,1.0)
-        text3d("GO!", jeepObj.posX, jeepObj.posY + 3.0, jeepObj.posZ)
+        text3d("Birdwatcher! Follow the eagle!", jeepObj.posX + 3.5, jeepObj.posY + 3.0, jeepObj.posZ)
     else:
         canStart = True
         glColor3f(0.0,1.0,1.0)
-        text3d("Scoring: "+str(countTime), jeepObj.posX, jeepObj.posY + 3.0, jeepObj.posZ)
+        text3d("Time: "+str(countTime), jeepObj.posX, jeepObj.posY + 3.0, jeepObj.posZ)
+
+    if score < speedupScore + 5:
+        glColor3f(1.0,1.0,1.0)
+        text3d("Speedup bonus! ", jeepObj.posX + 1.0, jeepObj.posY + 4.0, jeepObj.posZ)
+
 
     for obj in objectArray:
         obj.draw()
@@ -306,7 +312,7 @@ def display():
     glutSwapBuffers()
 
 def idle():#--------------with more complex display items like turning wheel---
-    global tickTime, prevTime, score
+    global tickTime, prevTime, score, behindView, centered, speedupScore, speed
     #jeepObj.rotateWheel(-0.1 * tickTime)    
     glutPostRedisplay()
     
@@ -315,6 +321,20 @@ def idle():#--------------with more complex display items like turning wheel---
     prevTime = curTime
     score = int(curTime/1000)
     eagleObj.move(score / 10)
+
+    if score < 6:
+        eagleView()
+
+    elif score == 6:
+        behindView = True
+        centered = True
+        setObjView()
+
+    if score < speedupScore + 5:
+        speed = 5
+
+    else:
+        speed = 1
 
     # if the game has not concluded
     if overReason == '' and finalScore == 0:
@@ -354,6 +374,15 @@ def setObjView():
 
     glMatrixMode(GL_MODELVIEW)
     glutPostRedisplay()
+
+def eagleView():
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluPerspective(90, 1, 0.1, 100)
+    gluLookAt(eagleObj.posX, eagleObj.posY, eagleObj.posZ + 10.0, eagleObj.posX, eagleObj.posY, eagleObj.posZ, 0, 1, 0)
+    glMatrixMode(GL_MODELVIEW)
+    glutPostRedisplay()
+
 
 #-------------------------------------------user inputs------------------
 def mouseHandle(button, state, x, y):
@@ -531,7 +560,7 @@ def addTree(x, z):
         treeObjs.append(tree2.tree2(x, z))
 
 def collisionCheck():
-    global overReason, score, usedDiamond, countTime, speed
+    global overReason, score, usedDiamond, countTime, speedupScore
     for obstacle in obstacleCoord:
         if dist((jeepObj.posX, jeepObj.posZ), obstacle) <= ckSense:
             overReason = "You hit an obstacle!"
@@ -557,7 +586,7 @@ def collisionCheck():
         gameSuccess()
 
     if land * gameEnlarge / 2 + 3 >= jeepObj.posZ >= land * gameEnlarge / 2 - 3 and land / 2 > jeepObj.posX > 0:
-        speed = 5.0
+        speedupScore = score
 
 #----------------------------------multiplayer dev (using tracker)-----------
 def recordGame():
@@ -752,7 +781,7 @@ def main():
     glutDisplayFunc(display)
     glutIdleFunc(idle)#wheel turn
 
-    setView()
+    #setView()
     glLoadIdentity()
     glEnable(GL_DEPTH_TEST)   
 
